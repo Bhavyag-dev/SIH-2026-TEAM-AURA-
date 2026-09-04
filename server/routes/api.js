@@ -14,6 +14,104 @@ router.get('/users', async (req, res) => {
   }
 });
 
+router.post('/auth/register', async (req, res) => {
+  try {
+    const { 
+      name, 
+      phone, 
+      email, 
+      password, 
+      role = 'buyer',
+      location, 
+      state, 
+      district,
+      fpoName,
+      landAreaAcres,
+      primaryCrop,
+      bankAccount,
+      upiId,
+      companyName,
+      gstin,
+      deliveryAddress
+    } = req.body;
+
+    if (!name || !phone) {
+      return res.status(400).json({ error: 'Name and Phone number are required' });
+    }
+
+    const users = await db.find('User');
+    const existing = users.find(u => u.phone === phone || (email && u.email === email));
+    if (existing) {
+      return res.status(400).json({ error: 'An account with this phone or email already exists. Please login.' });
+    }
+
+    const newUser = await db.create('User', {
+      name,
+      phone,
+      email: email || `${phone}@krishiroute.in`,
+      password: password || '123456',
+      role,
+      location: location || `${district || 'Jaipur'}, ${state || 'Rajasthan'}`,
+      state: state || 'Rajasthan',
+      district: district || 'Jaipur',
+      fpoName: fpoName || (role === 'farmer' ? 'Shree Krishi Producer Co' : undefined),
+      landAreaAcres: landAreaAcres || 5,
+      primaryCrop: primaryCrop || 'Tomato',
+      bankAccount: bankAccount || 'SBI A/C **** 4891',
+      upiId: upiId || `${phone}@upi`,
+      companyName: companyName || (role === 'buyer' ? `${name} Wholesale` : undefined),
+      gstin: gstin || undefined,
+      deliveryAddress: deliveryAddress || `${district || 'Jaipur'}, Rajasthan`,
+      verified: true,
+      createdAt: new Date().toISOString()
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Account registered successfully!',
+      user: newUser,
+      token: 'jwt_krishiroute_' + (newUser._id || newUser.id)
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.post('/auth/login', async (req, res) => {
+  try {
+    const { identifier, phone, email, password } = req.body;
+    const loginId = identifier || phone || email;
+
+    if (!loginId) {
+      return res.status(400).json({ error: 'Phone or email is required' });
+    }
+
+    const users = await db.find('User');
+    let user = users.find(u => 
+      u.phone === loginId || 
+      (u.email && u.email.toLowerCase() === loginId?.toLowerCase())
+    );
+
+    // If identifier is demo role 'buyer', 'farmer', 'admin'
+    if (!user && ['buyer', 'farmer', 'admin'].includes(loginId.toLowerCase())) {
+      user = users.find(u => u.role === loginId.toLowerCase()) || users[0];
+    }
+
+    if (!user) {
+      return res.status(401).json({ error: 'Account not found. Please check your credentials or register.' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Logged in successfully',
+      user,
+      token: 'jwt_krishiroute_' + (user._id || user.id)
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 router.post('/auth/demo-switch', async (req, res) => {
   try {
     const { role } = req.body;
