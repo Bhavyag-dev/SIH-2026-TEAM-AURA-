@@ -1,0 +1,26 @@
+{
+  "name": "kisansetu-sih2026",
+  "version": "1.0.0",
+  "description": "Intelligent Agricultural Transaction & Fulfilment Coordination Platform (SIH 2026 PS 26033)",
+  "scripts": {
+    "server": "node server/server.js",
+    "server:dev": "node --watch server/server.js",
+    "client": "npm run dev --prefix client",
+    "dev": "concurrently \"npm run server:dev\" \"npm run client\"",
+    "build": "npm run build --prefix client",
+    "start": "node server/server.js"
+  },
+  "keywords": [
+    "sih2026",
+    "agriculture",
+    "mern",
+    "logistics",
+    "optimization",
+    "doca"
+  ],
+  "author": "SIH Team",
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
