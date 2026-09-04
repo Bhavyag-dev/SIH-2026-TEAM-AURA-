@@ -101,7 +101,7 @@ body.theme-dark {
 
 html { scroll-behavior: smooth; }
 
-body {
+body.portal-active {
   font-family: var(--font-body);
   background: var(--bg);
   background-image: var(--grad-page);
@@ -115,7 +115,7 @@ body {
   overflow-x: hidden;
 }
 
-h1,h2,h3,h4,h5,h6 {
+.page-wrap h1, .page-wrap h2, .page-wrap h3, .page-wrap h4, .page-wrap h5, .page-wrap h6 {
   font-family: var(--font-heading);
   font-weight: 700;
   letter-spacing: -.03em;
@@ -123,8 +123,8 @@ h1,h2,h3,h4,h5,h6 {
   color: var(--text-1);
 }
 
-a { color: var(--primary); text-decoration: none; }
-a:hover { text-decoration: underline; }
+.page-wrap a { color: var(--primary); text-decoration: none; }
+.page-wrap a:hover { text-decoration: underline; }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
