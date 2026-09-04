@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminRoutes from './admin/AdminRoutes';
 import FarmerRoutes from './farmer/FarmerRoutes';
 import UserRoutes from './user/UserRoutes';
+import LandingPage from './landing/LandingPage';
 
 export default function App() {
   return (
@@ -17,8 +18,9 @@ export default function App() {
         {/* User / Buyer Portal */}
         <Route path="/user/*" element={<UserRoutes />} />
 
-        {/* Landing / Root → show portal picker */}
-        <Route path="/" element={<PortalPicker />} />
+        {/* Flagship Landing Page */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/portals" element={<PortalPicker />} />
 
         {/* Legacy routes */}
         <Route path="/login" element={<Navigate to="/user/login" replace />} />
