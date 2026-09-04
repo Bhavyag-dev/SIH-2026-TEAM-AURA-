@@ -8,7 +8,7 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: `http://localhost:${process.env.PORT || 5001}`,
         changeOrigin: true,
       },
     },
@@ -18,7 +18,7 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: `http://localhost:${process.env.PORT || 5001}`,
         changeOrigin: true,
       },
     },
